@@ -45,7 +45,13 @@ async function sendToFive9(leadData) {
 
     console.log('✅ Lead sent to Five9:', response.data);
   } catch (error) {
-    console.error('❌ Error sending lead to Five9:', error.response?.data || error.message);
+    console.error('❌ Error sending lead to Five9:');
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Data:', error.response.data);
+    } else {
+      console.error(error.message);
+    }
   }
 }
 
