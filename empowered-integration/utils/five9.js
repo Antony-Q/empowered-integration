@@ -1,5 +1,6 @@
 // utils/five9.js
 const axios = require('axios');
+const qs = require('qs');
 
 // Replace with your real Five9 values
 const FIVE9_DOMAIN = 'Empowered Aesthetic Solutions'; // Case-sensitive
@@ -7,39 +8,34 @@ const LIST_NAME = 'Island ENT-Exomind'; // Must match Five9 exactly
 const FIVE9_USERNAME = process.env.FIVE9_USERNAME;
 const FIVE9_PASSWORD = process.env.FIVE9_PASSWORD;
 
-/**
- * Formats Meta lead data and sends it to Five9
- * @param {Object} leadData - Parsed data from Meta webhook
- * @returns {Promise<void>}
- */
 async function sendToFive9(leadData) {
   const { first_name, last_name, email, phone } = leadData;
 
-  const payload = {
-    domain: FIVE9_DOMAIN,
-    list: LIST_NAME,
-    contacts: [
-      {
-        firstName: first_name || '',
-        lastName: last_name || '',
-        email: email || '',
-        phoneNumber: phone || '',
-      },
-    ],
-  };
+  const payload = qs.stringify({
+    F9domain: FIVE9_DOMAIN,
+    F9list: LIST_NAME,
+    F9key: 'number1', // required for deduplication logic
+    number1: phone || '',
+    first_name: first_name || '',
+    last_name: last_name || '',
+    email: email || '',
+    F9updateCRM: true,
+    F9retResults: true,
+    F9CallASAP: true
+  });
 
   try {
     const response = await axios.post(
-    'https://api.five9.com/web2campaign/AddContact',
+      'https://api.five9.com/web2campaign/AddToList',
       payload,
       {
         auth: {
           username: FIVE9_USERNAME,
-          password: FIVE9_PASSWORD,
+          password: FIVE9_PASSWORD
         },
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        }
       }
     );
 
