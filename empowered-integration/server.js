@@ -1,12 +1,21 @@
-require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
-const webhookRoutes = require('./routes/webhook');
-
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
+// Parse incoming x-www-form-urlencoded form data (required for Five9)
+app.use(express.urlencoded({ extended: true }));
+
+// (Optional) Also add this in case anything uses JSON later
+app.use(express.json());
+
+// Load environment variables
+require('dotenv').config();
+
+// Register your routes here (e.g.)
+const webhookRoutes = require('./routes/webhook');
 app.use('/webhook', webhookRoutes);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start your server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

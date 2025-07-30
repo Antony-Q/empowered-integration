@@ -20,18 +20,16 @@ router.get('/', (req, res) => {
 // Meta Webhook Lead Payload Handler (POST)
 router.post('/', async (req, res) => {
   try {
-    console.log('Webhook payload received:', JSON.stringify(req.body, null, 2));
+    console.log('Webhook payload received:', req.body);
 
-    const payload = req.body;
+    // Extract relevant fields directly
+    const parsedData = {
+      first_name: req.body.first_name || '',
+      last_name: req.body.last_name || '',
+      email: req.body.email || '',
+      phone: req.body.number1 || ''
+    };
 
-    // Step 1: Parse lead data
-    const fieldData = payload.field_data || [];
-    const parsedData = {};
-    fieldData.forEach(({ name, values }) => {
-      parsedData[name] = values[0]; // Only take the first value
-    });
-
-    // Step 2: Send to Five9
     await sendToFive9(parsedData);
 
     res.sendStatus(200);
