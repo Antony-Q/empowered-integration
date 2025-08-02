@@ -91,22 +91,22 @@ This project uses Basic Authentication via encoded credentials in the `Authoriza
 
 ## 🗃 Example Webhook Payload (Meta)
 
-{
-  "first_name": "Tony",
-  "last_name": "Montana",
-  "email": "tony@example.com",
-  "number1": "2813308004",
-  "F9domain": "Empowered Aesthetic Solutions",
-  "F9list": "Island ENT-Exomind",
-  "F9key": "number1",
-  "F9updateCRM": "true",
-  "F9retResults": "true",
-  "F9CallASAP": "true"
-}
+{  
+  "first_name": "Tony",  
+  "last_name": "Montana",  
+  "email": "tony@example.com",  
+  "number1": "2813308004",  
+  "F9domain": "Empowered Aesthetic Solutions",  
+  "F9list": "Island ENT-Exomind",  
+  "F9key": "number1",  
+  "F9updateCRM": "true",  
+  "F9retResults": "true",  
+  "F9CallASAP": "true"  
+}  
 
 ---
 
 ## 📬 Contact
-Project lead: Antony Q
-Contact details: Request from appropriate parties within Empowered Aesthetic Solutions
-Internal roles involved: CEO, Caitlin (Operations & PM), Five9 Support, Empowered Marketing Team
+Project lead: Antony Q  
+Contact details: Request from appropriate parties within Empowered Aesthetic Solutions  
+Internal roles involved: CEO, Caitlin (Operations & PM), Five9 Support, Empowered Marketing Team  
