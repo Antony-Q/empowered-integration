@@ -6,7 +6,8 @@
     "timezone": "America/New_York",
     "promotion": "Free Consultation August",
     "calendarLink": "https://ghl.link/islandent-calendar",
-    "connectors": ["FB", "GHL", "Zapier"]
+    "connectors": ["FB", "GHL", "Zapier"],
+    "skillSet": "Kris Huston"
   },
   "Dr. Zen Med Spa": {
     "five9List": "Zen Med-New Leads",
@@ -15,6 +16,7 @@
     "timezone": "America/Los_Angeles",
     "promotion": "Laser Special",
     "calendarLink": "https://ghl.link/drzen-calendar",
-    "connectors": ["TikTok", "Zapier"]
+    "connectors": ["TikTok", "Zapier"],
+    "skillSet": "Dana Nguyen"
   }
 }
