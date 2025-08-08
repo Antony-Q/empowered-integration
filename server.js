@@ -27,3 +27,36 @@ app.get('/webhook', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.post('/simulate-meta-lead', (req, res) => {
+  const simulatedPayload = {
+    object: 'page',
+    entry: [
+      {
+        id: '123456789',
+        time: Date.now(),
+        changes: [
+          {
+            field: 'leadgen',
+            value: {
+              ad_id: 'fake_ad_001',
+              form_id: 'fake_form_123',
+              leadgen_id: 'sim_lead_001',
+              created_time: Date.now(),
+              page_id: '999999'
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  console.log('🔥 Simulated Meta webhook triggered');
+  console.log('Payload:', JSON.stringify(simulatedPayload, null, 2));
+
+  // OPTIONAL: route this to the actual webhook logic
+  // For example:
+  handleMetaLead(simulatedPayload);
+
+  res.send({ status: 'Simulated lead sent' });
+});
