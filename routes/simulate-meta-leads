@@ -1,0 +1,36 @@
+const express = require('express');
+const router = express.Router();
+const handleMetaLead = require('../utils/handleMetaLead'); // <- This is what will be created
+
+router.post('/', (req, res) => {
+  const simulatedPayload = {
+    object: 'page',
+    entry: [
+      {
+        id: '123456789',
+        time: Date.now(),
+        changes: [
+          {
+            field: 'leadgen',
+            value: {
+              ad_id: 'fake_ad_001',
+              form_id: 'fake_form_123',
+              leadgen_id: 'sim_lead_001',
+              created_time: Date.now(),
+              page_id: '999999'
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  console.log('🔥 Simulated Meta webhook triggered');
+  console.log('Payload:', JSON.stringify(simulatedPayload, null, 2));
+
+  handleMetaLead(simulatedPayload);
+
+  res.send({ status: 'Simulated lead sent' });
+});
+
+module.exports = router;

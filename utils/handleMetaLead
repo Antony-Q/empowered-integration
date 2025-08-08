@@ -8,8 +8,6 @@ function handleMetaLead(payload) {
 
   const { leadgen_id, ad_id, form_id, page_id } = leadData;
 
-  // TODO: Add logic to pull lead details from Meta Lead API if needed
-  // Here: mock the form field data
   const mockFields = {
     first_name: 'Tony',
     last_name: 'Montana',
@@ -20,7 +18,6 @@ function handleMetaLead(payload) {
   console.log('✅ Parsed simulated lead:');
   console.log(mockFields);
 
-  // Format for Five9
   const five9Payload = {
     F9domain: 'Empowered Aesthetic Solutions',
     F9list: 'Island ENT-Exomind',
@@ -36,7 +33,6 @@ function handleMetaLead(payload) {
 
   console.log('📨 Ready to POST to Five9:');
   console.log(five9Payload);
-
-  // Optional: call the Five9 send function here
-  // sendToFive9(five9Payload);
 }
+
+module.exports = handleMetaLead;
