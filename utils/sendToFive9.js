@@ -70,7 +70,9 @@ if (errCodeMatch) {
   if (code === '0') {
     console.log('🎉 Success: Lead accepted by Five9');
   } else {
-    console.log(`⚠️ Five9 returned error code ${code}: ${desc}`);
+    const friendlyDesc = codeDescriptions[code] || 'Unknown error';
+    console.log(`⚠️ Five9 returned error code ${code}: ${desc} (${friendlyDesc})`);
+
   }
 } else {
   console.log('❓ Unexpected response format from Five9');
