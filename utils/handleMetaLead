@@ -1,3 +1,5 @@
+const sendToFive9 = require('./sendToFive9');
+
 function handleMetaLead(payload) {
   const leadData = payload?.entry?.[0]?.changes?.[0]?.value;
 
@@ -33,6 +35,8 @@ function handleMetaLead(payload) {
 
   console.log('📨 Ready to POST to Five9:');
   console.log(five9Payload);
+  
+  sendToFive9(five9Payload);
 }
 
 module.exports = handleMetaLead;

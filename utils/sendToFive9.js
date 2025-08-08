@@ -32,7 +32,7 @@ async function sendToFive9(payload) {
     const response = await axios.post(five9Url, params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${process.env.FIVE9_AUTH}` // from your .env
+        'Authorization': `Basic ${process.env.FIVE9_AUTH}` // from .env file
       }
     });
 
