@@ -8,6 +8,9 @@ app.use(express.json());
 const leadRoutes = require('./routes/leads');
 app.use('/api/leads', leadRoutes);
 
+const simulateMetaLeadRoute = require('./routes/simulate-meta-leads');
+app.use('/simulate-meta-lead', simulateMetaLeadRoute);
+
 app.get('/webhook', (req, res) => {
   const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN;
   const mode = req.query['hub.mode'];
