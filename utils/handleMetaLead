@@ -21,9 +21,23 @@ function handleMetaLead(payload) {
   console.log('✅ Parsed simulated lead:');
   console.log(mockFields);
 
-  // TEMPORARY: Use static client name — we'll map this later from page_id or form_id
-  const clientName = 'Island ENT';
-  const clientConfig = clientCampaigns[clientName];
+  // Dynamic Client Name
+  let clientName = null;
+let clientConfig = null;
+
+for (const [name, config] of Object.entries(clientCampaigns)) {
+  if (config.formIds.includes(form_id)) {
+    clientName = name;
+    clientConfig = config;
+    break;
+  }
+}
+
+if (!clientConfig) {
+  console.warn(`⚠️ No matching client config found for form_id "${form_id}".`);
+  return;
+}
+
 
   if (!clientConfig) {
     console.warn(`⚠️ No config found for client "${clientName}".`);
