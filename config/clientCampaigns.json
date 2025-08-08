@@ -1,0 +1,20 @@
+{
+  "Island ENT": {
+    "five9List": "Island ENT-Exomind",
+    "ani": "1234567890",
+    "businessHours": "Mon-Fri 9am-5pm EST",
+    "timezone": "America/New_York",
+    "promotion": "Free Consultation August",
+    "calendarLink": "https://ghl.link/islandent-calendar",
+    "connectors": ["FB", "GHL", "Zapier"]
+  },
+  "Dr. Zen Med Spa": {
+    "five9List": "Zen Med-New Leads",
+    "ani": "4445556666",
+    "businessHours": "Tue-Sat 10am-6pm PST",
+    "timezone": "America/Los_Angeles",
+    "promotion": "Laser Special",
+    "calendarLink": "https://ghl.link/drzen-calendar",
+    "connectors": ["TikTok", "Zapier"]
+  }
+}
