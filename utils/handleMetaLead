@@ -55,6 +55,7 @@ function handleMetaLead(payload) {
   console.log(`📣 Promo: ${clientConfig.promotion}`);
   console.log(`📅 Calendar: ${clientConfig.calendarLink}`);
   console.log(`🔌 Connectors: ${clientConfig.connectors.join(', ')}`);
+  console.log(`👤 Assigned Rep / Skill Set: ${clientConfig.skillSet}`);
 
   sendToFive9(five9Payload);
 }
