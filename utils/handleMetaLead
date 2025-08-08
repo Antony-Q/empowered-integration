@@ -1,4 +1,5 @@
 const sendToFive9 = require('./sendToFive9');
+const clientCampaigns = require('../config/clientCampaigns.json');
 
 function handleMetaLead(payload) {
   const leadData = payload?.entry?.[0]?.changes?.[0]?.value;
@@ -20,9 +21,21 @@ function handleMetaLead(payload) {
   console.log('✅ Parsed simulated lead:');
   console.log(mockFields);
 
+  // TEMPORARY: Use static client name — we'll map this later from page_id or form_id
+  const clientName = 'Island ENT';
+  const clientConfig = clientCampaigns[clientName];
+
+  if (!clientConfig) {
+    console.warn(`⚠️ No config found for client "${clientName}".`);
+    return;
+  }
+
+  console.log(`📦 Loaded config for ${clientName}:`);
+  console.log(clientConfig);
+
   const five9Payload = {
     F9domain: 'Empowered Aesthetic Solutions',
-    F9list: 'Island ENT-Exomind',
+    F9list: clientConfig.five9List,
     F9key: 'number1',
     number1: mockFields.phone_number,
     first_name: mockFields.first_name,
@@ -35,7 +48,13 @@ function handleMetaLead(payload) {
 
   console.log('📨 Ready to POST to Five9:');
   console.log(five9Payload);
-  
+
+  console.log(`📞 Using ANI: ${clientConfig.ani}`);
+  console.log(`⏰ Biz hours: ${clientConfig.businessHours} (${clientConfig.timezone})`);
+  console.log(`📣 Promo: ${clientConfig.promotion}`);
+  console.log(`📅 Calendar: ${clientConfig.calendarLink}`);
+  console.log(`🔌 Connectors: ${clientConfig.connectors.join(', ')}`);
+
   sendToFive9(five9Payload);
 }
 
