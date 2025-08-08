@@ -8,7 +8,7 @@ app.use(express.json());
 const leadRoutes = require('./routes/leads');
 app.use('/api/leads', leadRoutes);
 
-const simulateMetaLeadRoute = require('./routes/simulate-meta-leads');
+const simulateMetaLeadRoute = require('./routes/simulate-meta-lead');
 app.use('/simulate-meta-lead', simulateMetaLeadRoute);
 
 app.get('/webhook', (req, res) => {
