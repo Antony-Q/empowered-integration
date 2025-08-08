@@ -1,6 +1,25 @@
 const axios = require('axios');
 
 async function sendToFive9(payload) {
+    
+    const codeDescriptions = {
+  0: 'Success – Lead accepted',
+  600: 'Missing field in CRM table',
+  602: 'Record already existed – added to list',
+  603: 'Record already exists in list – not added',
+  700: 'Missing required field',
+  708: 'Multiple records matched F9Key',
+  709: 'No key provided',
+  710: 'Time format required with Time to Dial',
+  711: 'Invalid time to dial',
+  712: 'Invalid key field name',
+  713: 'Field value too long',
+  714: 'Incorrect field format',
+  715: 'Too many requests – rate limit hit',
+  716: 'Domain disabled',
+  718: 'Domain not found',
+};
+
   const {
     F9domain,
     F9list,
@@ -36,7 +55,27 @@ async function sendToFive9(payload) {
       }
     });
 
-    console.log('✅ Lead sent to Five9:', response.data);
+    const rawResponse = response.data;
+
+console.log('✅ Five9 raw response:', rawResponse);
+
+// Try to extract result codes from the return string
+const errCodeMatch = rawResponse.match(/F9errCode=(\d+)/);
+const errDescMatch = rawResponse.match(/F9errDesc="([^"]+)"/);
+
+if (errCodeMatch) {
+  const code = errCodeMatch[1];
+  const desc = errDescMatch ? errDescMatch[1] : 'No description provided';
+
+  if (code === '0') {
+    console.log('🎉 Success: Lead accepted by Five9');
+  } else {
+    console.log(`⚠️ Five9 returned error code ${code}: ${desc}`);
+  }
+} else {
+  console.log('❓ Unexpected response format from Five9');
+}
+
     return response.data;
   } catch (error) {
     console.error('❌ Error sending lead to Five9:', error.response?.data || error.message);
