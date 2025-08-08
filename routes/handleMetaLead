@@ -1,0 +1,42 @@
+function handleMetaLead(payload) {
+  const leadData = payload?.entry?.[0]?.changes?.[0]?.value;
+
+  if (!leadData) {
+    console.log('❌ Invalid lead payload');
+    return;
+  }
+
+  const { leadgen_id, ad_id, form_id, page_id } = leadData;
+
+  // TODO: Add logic to pull lead details from Meta Lead API if needed
+  // Here: mock the form field data
+  const mockFields = {
+    first_name: 'Tony',
+    last_name: 'Montana',
+    email: 'tony@example.com',
+    phone_number: '2813308004'
+  };
+
+  console.log('✅ Parsed simulated lead:');
+  console.log(mockFields);
+
+  // Format for Five9
+  const five9Payload = {
+    F9domain: 'Empowered Aesthetic Solutions',
+    F9list: 'Island ENT-Exomind',
+    F9key: 'number1',
+    number1: mockFields.phone_number,
+    first_name: mockFields.first_name,
+    last_name: mockFields.last_name,
+    email: mockFields.email,
+    F9updateCRM: 'true',
+    F9retResults: 'true',
+    F9CallASAP: 'true'
+  };
+
+  console.log('📨 Ready to POST to Five9:');
+  console.log(five9Payload);
+
+  // Optional: call the Five9 send function here
+  // sendToFive9(five9Payload);
+}
