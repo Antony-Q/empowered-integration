@@ -1,112 +1,106 @@
-# Web2Campaign API Integration
+# Empowered Lead Integration: Meta → Five9 (Web2Campaign API)
 
-This project facilitates a custom lead delivery pipeline that routes lead data from Meta (Facebook/Instagram) forms to the Five9 Web2Campaign API. It is designed to replace GoHighLevel for lead management and integrate seamlessly with the Empowered lead ecosystem.
-
-## 🔧 Overview
-
-The system listens for incoming lead data from Meta's webhook system, formats and authenticates it, and submits it to the appropriate campaign and list in Five9 using a `POST` request. It uses Basic Auth headers to securely authenticate each request with the Five9 Web2Campaign API.
-
-The backend is built with Node.js + Express and is structured to be easily extensible as new campaigns, sources, and lists are added.
+This system delivers a scalable and modular pipeline for routing leads from Meta (Facebook/Instagram) lead forms directly into Five9’s Web2Campaign API. It was built as a functional proof of concept (PoC) to demonstrate lead automation across Empowered’s client base.
 
 ---
 
-## ✅ Current Status
+## 🚀 Project Highlights
 
-- **Phase 1: Meta Webhook Parsing** — ✅ Complete  
-- **Phase 2: Five9 Integration** — ✅ Complete (pending final webhook from Meta)  
-- **Current Functionality:**  
-  - Handles webhook payload from Meta
-  - Parses and maps relevant fields
-  - Sends formatted lead data to Five9 via Web2Campaign API
-  - Logs activity and errors
+- Simulates and parses Meta leadgen payloads
+- Automatically maps clients based on form ID
+- Dynamically assigns Five9 campaign lists and rep skill sets
+- Sends formatted data to Five9 using authenticated API POST
+- Config-driven system for handling ANIs, business hours, promotions, and calendars
 
----
-
-## 🔜 Planned Features
-
-- **Multiple Campaign/List Support**  
-  Logic for dynamically routing leads to multiple campaigns and dialing lists based on campaign ID or source.
-
-- **GoHighLevel Migration Handling**  
-  Pulling or translating data from GoHighLevel (where applicable) into the new Five9-based system.
-
-- **Expanded Error Logging & Reporting**  
-  More granular logging with status codes, retries, and internal alerts for failed posts.
+> Even without live Meta payloads (pending platform verification), this PoC proves the end-to-end routing logic and Five9 integration works and is production-ready.
 
 ---
 
-## 💡 Optional Additions (Under Consideration)
+## ✅ Current Functionality
 
-- **Internal Admin Dashboard**  
-  Web UI to:
-  - View recent leads
-  - Monitor API success/failure logs
-  - Search/filter by campaign/list/source
-  - Manually retry or test submissions
+- 🧠 **Meta Payload Parser**
+  - Handles GET verification and POST webhook logic
+  - Includes test route to simulate leadgen payloads without live ad data
 
-- **Google Ads Integration**  
-  Parsing lead data from Google Ads forms and sending to Five9 using the same pipeline.
+- 📨 **Five9 Integration**
+  - Authenticates with Web2Campaign using Basic Auth
+  - Dynamically builds POST payloads from per-client config
+  - Parses and logs Five9 response codes for transparency
 
-- **Webhook Management Interface**  
-  GUI to manage active webhook endpoints, secrets, and logs.
+- 🔄 **Client Mapping & Automation**
+  - Matches incoming leads to client campaigns using `form_id`
+  - Each client has defined: ANI, timezone, business hours, calendar URL, connectors, assigned rep (skill set)
 
-- **Auth System Upgrade**  
-  Replace shared auth with OAuth2 or token-based API key system for internal tools.
-
----
-
-## 📄 Five9 Web2Campaign Docs
-
-Reference:  
-[Five9 Web2Campaign Developer Guide (PDF)](https://documentation.five9.com/bundle/w2c-developers-guide)
+- 🛠️ **Extensible Config Structure**
+  - Config file structure supports up to 150+ clients
+  - Future integration with Google Sheets or GHL API possible
 
 ---
 
-## 🧑‍💻 Tech Stack
+## 🧭 Key Discoveries
 
-- Node.js  
-- Express.js  
-- dotenv  
-- body-parser  
-- Axios (optional for external requests)
-
----
-
-## 🔐 Authentication
-
-This project uses Basic Authentication via encoded credentials in the `Authorization` header when communicating with Five9. These credentials must be stored securely in `.env`.
+- Only ~30 out of 150+ clients currently meet the criteria for automated lead routing:
+  - Require active ad campaigns
+  - Require full access to page, form, and ad account
+  - Require leadgen permissions to be correctly configured
+- The system is ready to expand as more campaigns go live
 
 ---
 
-## 🚧 Setup & Environment
+## 🛣️ Future Work
 
-1. Clone this repo.
-2. Create a `.env` file using the provided `.env.example`.
-3. Start the server:
-   ```bash
-   npm install
-   npm run dev
-
----
-
-## 🗃 Example Webhook Payload (Meta)
-
-{  
-  "first_name": "Tony",  
-  "last_name": "Montana",  
-  "email": "tony@example.com",  
-  "number1": "2813308004",  
-  "F9domain": "Empowered Aesthetic Solutions",  
-  "F9list": "Island ENT-Exomind",  
-  "F9key": "number1",  
-  "F9updateCRM": "true",  
-  "F9retResults": "true",  
-  "F9CallASAP": "true"  
-}  
+- [ ] Enable dynamic GHL calendar pulling via API
+- [ ] Build a lightweight UI to manage campaign config
+- [ ] Add Google Ads webhook support
+- [ ] Store inbound lead records to CSV or DB for auditing
+- [ ] Integrate retry queue for failed API submissions
 
 ---
 
-## 📬 Contact
-Project lead: Antony Q  
-Contact details: Request from appropriate parties within Empowered Aesthetic Solutions  
-Internal roles involved: CEO, Caitlin (Operations & PM), Five9 Support, Empowered Marketing Team  
+## ⚙️ Tech Stack
+
+- Node.js + Express
+- dotenv for secrets management
+- Axios for outbound requests
+- JSON config for routing logic
+- LocalTunnel for webhook testing
+
+---
+
+## 🧪 Test Locally
+
+--bash
+npm install
+npm run dev
+Then trigger a simulated lead:
+curl -X POST http://localhost:3000/simulate-meta-lead
+This will send a lead payload to the Five9 API using test data and log the full processing path.
+
+---
+
+## 🧾 Sample Payload Output
+
+{
+  "first_name": "Tony",
+  "last_name": "Montana",
+  "email": "tony@example.com",
+  "phone_number": "2813308004",
+  "F9domain": "Empowered Aesthetic Solutions",
+  "F9list": "Island ENT-Exomind",
+  "F9key": "number1",
+  "F9updateCRM": "true",
+  "F9retResults": "true",
+  "F9CallASAP": "true"
+}
+
+---
+
+## 👥 Internal Stakeholders
+
+Project Lead: Antony Q
+
+CEO: Ryan
+
+Ops Lead / PM: Caitlin
+
+Platform: Empowered Aesthetic Solutions
