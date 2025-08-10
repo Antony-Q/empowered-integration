@@ -4,11 +4,10 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-        "init:pages": "node scripts/initPages.js",
-        "subscribe:leadgen": "node scripts/subscribeLeadgen.js",
-        "sync:forms": "node scripts/syncForms.js",
-        "serve": "node server/webhook.js"
+    "init:pages": "node scripts/initPages.js",
+    "subscribe:leadgen": "node scripts/subscribeLeadgen.js",
+    "sync:forms": "node scripts/syncForms.js",
+    "serve": "nodemon server/webhook.js"
   },
   "keywords": [],
   "author": "",
