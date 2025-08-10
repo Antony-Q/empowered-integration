@@ -1,4 +1,4 @@
-import "dotenv/config.js";
+import 'dotenv/config'; // not config.js
 import express from "express";
 import bodyParser from "body-parser";
 import { loadTokens, getLeadDetails, normalizeLeadFieldData } from "../src/meta.js";
