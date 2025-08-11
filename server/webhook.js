@@ -22,6 +22,9 @@ app.get("/meta/webhook", (req, res) => {
 // Leadgen receiver
 app.post("/meta/webhook", async (req, res) => {
   try {
+    console.log("Webhook payload received:");
+    console.dir(req.body, { depth: null });
+
     const changes = req.body.entry?.[0]?.changes || [];
     for (const ch of changes) {
       if (ch.field !== "leadgen") continue;
