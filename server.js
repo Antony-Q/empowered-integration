@@ -3,7 +3,12 @@ const express = require('express');
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({
+  verify: (req, _res, buf) => { req.rawBody = buf; }
+}));
+
+const ghlRoutes = require('./routes/ghl');
+app.use('/ghl', ghlRoutes);
 
 const leadRoutes = require('./routes/leads');
 app.use('/api/leads', leadRoutes);
