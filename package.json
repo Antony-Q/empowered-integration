@@ -7,7 +7,8 @@
     "init:pages": "node scripts/initPages.js",
     "subscribe:leadgen": "node scripts/subscribeLeadgen.js",
     "sync:forms": "node scripts/syncForms.js",
-    "serve": "nodemon server/webhook.js"
+    "serve": "nodemon server/webhook.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,6 @@
     "ngrok": "^5.0.0-beta.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.10"
   }
 }
