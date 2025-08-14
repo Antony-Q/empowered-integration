@@ -1,0 +1,12 @@
+{
+  "locations": {
+    "LOC_ve9EPM428h8vShlRW1KT": {
+      "five9Domain": "Empowered Aesthetic Solutions",
+      "defaultList": "Island ENT-Exomind",
+      "asap": true
+    }
+  },
+  "tagOverrides": [
+    { "tag": "Kris Huston", "list": "Kris Huston - All Campaigns", "asap": true }
+  ]
+}
