@@ -1,60 +1,78 @@
-import 'dotenv/config'; // not config.js
-import express from "express";
-import bodyParser from "body-parser";
-import { loadTokens, getLeadDetails, normalizeLeadFieldData } from "../src/meta.js";
-import { sendToFive9 } from "../src/five9.js";
+// server/webhook.js  (CommonJS version)
+require('dotenv').config();
 
-const app = express();
-app.use(bodyParser.json());
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 
-// Meta verification (setup one time)
-app.get("/meta/webhook", (req, res) => {
-  const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN || "verify_me";
-  const mode = req.query["hub.mode"];
-  const token = req.query["hub.verify_token"];
-  const challenge = req.query["hub.challenge"];
-  if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    return res.status(200).send(challenge);
-  }
-  return res.sendStatus(403);
-});
+const { verifyGhlSignature } = require('../services/ghlVerify');
+const { normalizePhone } = require('../utils/phone');
+const { postToFive9 } = require('../services/five9Client');
 
-// Leadgen receiver
-app.post("/meta/webhook", async (req, res) => {
+// Load routing map
+const cfgPath = process.env.ROUTES_PATH || './config/ghl.routes.json';
+const cfg = JSON.parse(fs.readFileSync(path.resolve(cfgPath), 'utf8'));
+
+// simple in-memory idempotency (swap for Redis later)
+const processed = new Set();
+
+function resolveRoute({ locationId, tags }) {
+  const loc = cfg.locations[locationId];
+  if (!loc) throw new Error(`Unknown locationId: ${locationId}`);
+  const hit = (cfg.tagOverrides || []).find(o => (tags || []).includes(o.tag));
+  return {
+    five9Domain: loc.five9Domain,
+    five9List: hit ? hit.list : loc.defaultList,
+    asap: hit && typeof hit.asap === 'boolean' ? hit.asap : !!loc.asap
+  };
+}
+
+router.post('/webhook', async (req, res) => {
   try {
-    console.log("Webhook payload received:");
-    console.dir(req.body, { depth: null });
+    // Verify signature (comment the next 4 lines TEMPORARILY if you need to bypass for testing)
+    const signature = req.headers['x-wh-signature'];
+    const rawBody = req.rawBody || Buffer.from(JSON.stringify(req.body));
+    const valid = verifyGhlSignature(rawBody, String(signature || ''));
+    if (!valid) return res.status(401).send('bad signature');
 
-    const changes = req.body.entry?.[0]?.changes || [];
-    for (const ch of changes) {
-      if (ch.field !== "leadgen") continue;
-      const page_id = ch.value.page_id;
-      const leadgen_id = ch.value.leadgen_id;
-      const form_id = ch.value.form_id;
-
-      // Find Page token
-      const { pages } = loadTokens();
-      const page = pages.find(p => p.page_id === String(page_id));
-      if (!page) {
-        console.error("No page token for page_id", page_id);
-        continue;
-      }
-
-      // Fetch lead details
-      const lead = await getLeadDetails(leadgen_id, page.page_access_token);
-      const normalized = normalizeLeadFieldData(lead.field_data);
-
-      // Send to Five9
-      const result = await sendToFive9(normalized);
-      console.log("[Five9 Result]", result.substring(0, 140) + "...");
+    const eventType = req.body?.type;
+    if (eventType !== 'ContactCreate' && eventType !== 'ContactTagUpdate') {
+      return res.status(200).send('ignored');
     }
 
-    res.sendStatus(200);
+    const wid = req.body.webhookId || req.body.id;
+    if (wid) {
+      if (processed.has(wid)) return res.status(200).send('duplicate');
+      processed.add(wid);
+    }
+
+    const data = req.body.data || req.body;
+    const phone = normalizePhone(data.phone || data.phoneNumber);
+    if (!phone) return res.status(200).send('ok'); // ack per GHL best practice
+
+    const locationId = data.locationId || req.body.locationId;
+    const tags = data.tags || [];
+    const route = resolveRoute({ locationId, tags });
+
+    const f9 = {
+      F9domain: route.five9Domain,
+      F9list: route.five9List,
+      number1: phone,
+      first_name: data.firstName || '',
+      last_name: data.lastName || '',
+      email: data.email || '',
+      F9updateCRM: 'true',
+      F9CallASAP: route.asap ? 'true' : 'false'
+    };
+
+    await postToFive9(f9);
+    return res.status(200).send('ok');
   } catch (e) {
-    console.error("Webhook error", e?.response?.data || e.message);
-    res.sendStatus(500);
+    console.error('GHL webhook error:', e);
+    // Return 200 to avoid webhook retry storms unless truly down
+    return res.status(200).send('error');
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Webhook up on :${port}`));
+module.exports = router;

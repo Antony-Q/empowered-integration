@@ -1,13 +1,14 @@
 {
   "name": "empowered-integration",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "server.js",
   "scripts": {
     "init:pages": "node scripts/initPages.js",
     "subscribe:leadgen": "node scripts/subscribeLeadgen.js",
     "sync:forms": "node scripts/syncForms.js",
     "serve": "nodemon server/webhook.js",
+    "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "keywords": [],

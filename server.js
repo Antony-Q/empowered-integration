@@ -7,7 +7,7 @@ app.use(express.json({
   verify: (req, _res, buf) => { req.rawBody = buf; }
 }));
 
-const ghlRoutes = require('./routes/ghl');
+const ghlRoutes = require('./server/webhook');
 app.use('/ghl', ghlRoutes);
 
 const leadRoutes = require('./routes/leads');
